@@ -20,36 +20,27 @@ import java.util.Map;
 
 
 public class JsonReader {
-    private static final String JSON_FILE_PATH = "data.json";
+  private static final String JSON_FILE_PATH = "data.json";
     private static final ObjectMapper MAPPER = new ObjectMapper ();
 
-    public static Map readFromJsonFile() {
-        // FIX: Nincs diamond operator a Java 6 stílus miatt
-        TypeReference mapType = new TypeReference() {};
+    public static Map readFromJsonFile() { // Visszatérési típus Map
+        // FIX: Nincs diamond operator a Java 6 stílus miatt, de pontosítjuk a típust
+        TypeReference<Map<String, Object>> mapType = new TypeReference<Map<String, Object>>() {};
         
         FileReader reader = null;
         try {
             reader = new FileReader(JSON_FILE_PATH);
+    
+            Map rootData = MAPPER.readValue(reader, mapType); 
+            System.out.println("Sikeres fajlbeolvasas: ");
             
-            // Beolvassuk a fő Map-et
-            Object rootData = MAPPER.readValue(reader, mapType); 
-            System.out.println("Succes file reading: ");
-            
-          //  return rootData;
+            return rootData; 
             
         } catch (IOException e) {
-            System.err.println("HIBA: Nem található a fájl (" + JSON_FILE_PATH + ") vagy olvasási hiba történt.");
+            System.err.println("HIBA: Nem találhato a fajl (" + JSON_FILE_PATH);
             e.printStackTrace();
             return null;
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    // Csendes hiba
-                }
-            }
-        }
+       
+        } 
     }
-          
 }
